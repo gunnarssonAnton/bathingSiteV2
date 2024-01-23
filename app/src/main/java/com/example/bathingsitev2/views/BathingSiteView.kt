@@ -4,6 +4,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bathtub
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,9 +21,14 @@ import com.example.bathingsitev2.R
 import com.example.bathingsitev2.viewModels.BathingSiteViewModel
 
 @Composable
-fun BathingSiteView(bathingSiteViewModel: BathingSiteViewModel = viewModel()) {
+fun BathingSiteView(
+    modifier: Modifier,
+    bathingSiteViewModel: BathingSiteViewModel = viewModel()
+) {
 
-    Box(contentAlignment = Alignment.Center){
+    Box(
+        modifier= modifier,
+        contentAlignment = Alignment.Center){
         Column(modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
@@ -37,10 +44,10 @@ fun BathingSiteView(bathingSiteViewModel: BathingSiteViewModel = viewModel()) {
 @Composable
 fun BathingSiteImg(onClick: ()-> Unit) {
 
-    Image(painterResource(id = R.drawable.skylt_bad,),
+    Image(imageVector = Icons.Filled.Bathtub,
         "Image Of Sign",
     modifier = Modifier
-        .size(500.dp)
+        .size(250.dp)
         .clickable { onClick() }
     )
 }
@@ -49,5 +56,5 @@ fun BathingSiteImg(onClick: ()-> Unit) {
 @Preview
 @Composable
 fun BatingSiteViewPrev() {
-    BathingSiteView()
+    BathingSiteView(Modifier)
 }

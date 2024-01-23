@@ -1,6 +1,11 @@
 package com.example.bathingsitev2.screens
 
+import android.content.res.Configuration
+import androidx.compose.foundation.gestures.ScrollableState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -10,6 +15,7 @@ import androidx.compose.material.icons.filled.Save
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -20,27 +26,54 @@ import com.example.bathingsitev2.components.OutlinedNumberField
 import com.example.bathingsitev2.components.RatingBar
 import com.example.bathingsitev2.components.SiteDialog
 import com.example.bathingsitev2.viewModels.AddBathingSiteViewModel
+import com.example.bathingsitev2.views.BathingSiteView
 
 @Composable
 fun AddBathingSiteScreen(
     navController: NavHostController,
     addBathingSiteViewModel: AddBathingSiteViewModel = AddBathingSiteViewModel()
 ) {
+    val config = LocalConfiguration.current
+    when(config.orientation){
 
-    ActionBar(addBathingSiteViewModel,navController)
-    {
-        AddBathingSiteForm(addBathingSiteViewModel)
+        Configuration.ORIENTATION_PORTRAIT -> {
+            ActionBar(addBathingSiteViewModel,navController)
+            {
+                AddBathingSiteForm(
+                    viewModel = addBathingSiteViewModel,
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+        }
+        Configuration.ORIENTATION_LANDSCAPE -> {
+            ActionBar(addBathingSiteViewModel,navController)
+            {
+                Row {
+                    BathingSiteView(modifier = Modifier.weight(1F))
+                    AddBathingSiteForm(
+                        viewModel = addBathingSiteViewModel,
+                        modifier = Modifier.weight(1F)
+                    )
+                }
+            }
+        }
     }
+
+
 }
 
 @Composable
-fun AddBathingSiteForm(viewModel: AddBathingSiteViewModel) {
+fun AddBathingSiteForm(
+    viewModel: AddBathingSiteViewModel,
+    modifier: Modifier
+) {
 
-    Box(modifier = Modifier
-        .fillMaxSize()
+    Box(modifier = modifier
         ){
         Column(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.SpaceBetween) {
             OutlinedTextField(
                 value = viewModel.name,

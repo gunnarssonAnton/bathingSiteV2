@@ -6,19 +6,20 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.bathingsitev2.views.BathingSiteView
 
 @Composable
 fun MainScreen(navController: NavHostController) {
-
         Scaffold(floatingActionButton = {
             Fab {
                 navController.navigate(Screen.AddBathingSiteScreen.route)
             }
         }) {
-            BathingSiteView()
+            BathingSiteView(Modifier)
         }
 
 
