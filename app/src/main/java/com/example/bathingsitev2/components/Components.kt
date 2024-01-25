@@ -80,66 +80,28 @@ fun OutlinedNumberField(
     )
 }
 
-/*
-@Composable
-fun RatingBar(
-    modifier: Modifier,
-    maxRating:Float = 5.0F,
-    currentRating: Float,
-    onRatingChanged: (Float)->Unit,
-    starsColor: Color = Color.Yellow
-) {
-    val filledStars by remember{ mutableStateOf(floor(currentRating).toInt())}
-    val unFilledStars by remember { mutableStateOf(maxRating.toInt() - ceil(currentRating))}
-    val halfStar by remember { mutableStateOf(!(currentRating.rem(1).equals(0.0)))}
-
-    Row(modifier = modifier) {
-       repeat(filledStars){
-           Icon(
-               imageVector = Icons.Outlined.Star,
-               contentDescription = null,
-               tint = starsColor
-           )
-       }
-        if (halfStar){
-            Icon(
-                imageVector = Icons.Outlined.StarHalf,
-                contentDescription = null,
-                tint = starsColor
-            )
-        }
-        repeat(unFilledStars.toInt()){
-            Icon(
-                imageVector = Icons.Outlined.StarOutline,
-                contentDescription = null,
-                tint = starsColor
-            )
-        }
-    }
-}*/
 @Composable
 fun RatingBar(
     maxRating: Int = 5,
-    currentRating: Float,
-    onRatingChanged: (Float) -> Unit,
+    currentRating: Int,
+    onRatingChanged: (Int) -> Unit,
     starsColor: Color = Color.Yellow
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center) {
+        horizontalArrangement = Arrangement.Center
+    ) {
         for (i in 1..maxRating) {
             Icon(
-                imageVector = if (i <= currentRating) Icons.Filled.Star
-                else Icons.Filled.StarOutline,
+                imageVector = if (i <= currentRating) Icons.Filled.Star else Icons.Filled.StarOutline,
                 contentDescription = null,
-                tint = if (i <= currentRating) starsColor
-                else Color.Unspecified,
+                tint = if (i <= currentRating) starsColor else Color.Unspecified,
 
                 modifier = Modifier
                     .height(60.dp)
                     .size(60.dp)
-                    .clickable { onRatingChanged(i.toFloat()) }
+                    .clickable { onRatingChanged(i) }
                     .padding(4.dp)
             )
         }
@@ -149,7 +111,7 @@ fun RatingBar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyDatePickerDialog(
+private fun CustomDatePickerDialog(
     onDateSelected : (String) -> Unit,
     onDismiss : () -> Unit
 ) {
@@ -218,7 +180,7 @@ fun DatePickerDialog(modifier: Modifier, pickedDate:(String)->Unit) {
         }
     }
     if (showDatePicker){
-        MyDatePickerDialog(
+        CustomDatePickerDialog(
             onDateSelected = {
                 date = it;
                 pickedDate(it) },

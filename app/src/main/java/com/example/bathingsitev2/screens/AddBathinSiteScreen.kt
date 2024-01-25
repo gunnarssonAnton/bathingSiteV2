@@ -1,43 +1,37 @@
 package com.example.bathingsitev2.screens
 
 import android.content.res.Configuration
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Bathtub
-import androidx.compose.material.icons.filled.Error
-import androidx.compose.material.icons.filled.Save
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
-import com.example.bathingsitev2.components.DatePickerDialog
-import com.example.bathingsitev2.components.OutlinedNumberField
-import com.example.bathingsitev2.components.RatingBar
-import com.example.bathingsitev2.components.SiteDialog
+import com.example.bathingsitev2.components.*
 import com.example.bathingsitev2.viewModels.AddBathingSiteViewModel
 import com.example.bathingsitev2.views.BathingSiteView
 
 @Composable
 fun AddBathingSiteScreen(
-    navController: NavHostController,
-    addBathingSiteViewModel: AddBathingSiteViewModel = AddBathingSiteViewModel()
+    navController: NavHostController?,
+    addBathingSiteViewModel: AddBathingSiteViewModel = viewModel()
 ) {
     val config = LocalConfiguration.current
     when(config.orientation){
 
         Configuration.ORIENTATION_PORTRAIT -> {
-            ActionBar(addBathingSiteViewModel,navController)
+            ActionBar(addBathingSiteViewModel, navController)
             {
                 AddBathingSiteForm(
                     viewModel = addBathingSiteViewModel,
@@ -46,7 +40,7 @@ fun AddBathingSiteScreen(
             }
         }
         Configuration.ORIENTATION_LANDSCAPE -> {
-            ActionBar(addBathingSiteViewModel,navController)
+            ActionBar(addBathingSiteViewModel, navController)
             {
                 Row {
                     BathingSiteView(modifier = Modifier.weight(1F))
@@ -80,13 +74,13 @@ fun AddBathingSiteForm(
                 onValueChange = { viewModel.name = it },
                 label = { Text("name:") },
                 modifier = Modifier.fillMaxWidth(),
-                isError = viewModel.showError,
+                isError = viewModel.showErrorText,
                 trailingIcon = {
-                    if (viewModel.showError)
+                    if (viewModel.showErrorText)
                         Icon(imageVector = Icons.Filled.Error, contentDescription = null, tint = MaterialTheme.colors.error)
                 }
             )
-            if (viewModel.showError){
+            if (viewModel.showErrorText){
                 Text(
                     text = "Fill Name",
                     color = MaterialTheme.colors.error,
@@ -110,13 +104,13 @@ fun AddBathingSiteForm(
                 onValueChange = { viewModel.address = it },
                 label = {Text("Address:")},
                 modifier = Modifier.fillMaxWidth(),
-                isError = viewModel.showError,
+                isError = viewModel.showErrorText,
                 trailingIcon = {
-                    if (viewModel.showError)
+                    if (viewModel.showErrorText)
                         Icon(imageVector = Icons.Filled.Error, contentDescription = null, tint = MaterialTheme.colors.error)
                 }
             )
-            if (viewModel.showError){
+            if (viewModel.showErrorText){
                 Text(
                     text = "Fill Address",
                     color = MaterialTheme.colors.error,
@@ -136,7 +130,7 @@ fun AddBathingSiteForm(
                     onNumberChange = {viewModel.longitude = it},
                     label = { Text("Longitude:")},
                     modifier = Modifier.weight(1F),
-                    isError = viewModel.showError
+                    isError = viewModel.showErrorText
                 )
 
                 OutlinedNumberField(
@@ -144,11 +138,11 @@ fun AddBathingSiteForm(
                     onNumberChange = {viewModel.latitude = it},
                     label = { Text("Latitude:")},
                     modifier = Modifier.weight(1F),
-                    isError = viewModel.showError
+                    isError = viewModel.showErrorText
                 )
 
             }
-            if (viewModel.showError){
+            if (viewModel.showErrorText){
                 Text(
                     text = "Fill ALL",
                     color = MaterialTheme.colors.error,
@@ -188,11 +182,14 @@ fun AddBathingSiteForm(
 @Composable
 fun ActionBar(
     viewModel: AddBathingSiteViewModel,
-    navigateBack: NavController,
-    content: @Composable()()->Unit
+    navigateBack: NavController?,
+    content: @Composable ()->Unit
 ) {
+    var showDropdown by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
+
             TopAppBar(
                 backgroundColor = MaterialTheme.colors.primary,
                 title = {
@@ -205,7 +202,7 @@ fun ActionBar(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navigateBack.navigate(Screen.MainScreen.route)}) {
+                    IconButton(onClick = { navigateBack?.navigate(Screen.MainScreen.route) }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "localized description",
@@ -227,13 +224,27 @@ fun ActionBar(
                             tint = Color.White
                         )
                     }
+                    IconButton(onClick = { showDropdown=true}) {
+                        Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
+                    }
+                    DropdownMenu(
+                        expanded = showDropdown,
+                        onDismissRequest = { showDropdown = false }
+                    ) {
+                        DropdownMenuItem(onClick = { viewModel.loadWeather()}) {
+                            Text(text = "Show Weather")
+                        }
+                        DropdownMenuItem(onClick = { println("CLICK") }) {
+                            Text(text = "Settings")
+                        }
+                    }
                 },
             )
                 
 
         },
         content = {
-            if(viewModel.showDialog){
+            if(viewModel.showSiteDialog){
                 SiteDialog(
                     onDismissRequest = { viewModel.removeDialog() },
                     onConfirmation = { viewModel.removeDialog() },
@@ -242,8 +253,25 @@ fun ActionBar(
                     icon = Icons.Filled.Bathtub
                 )
             }
+            if(viewModel.showLoading){
+                LoadingDialog()
+            }
+            if (viewModel.showWeatherDialog){
+                WeatherDialog(
+                    imageBitmap = viewModel.currentWeather.imageBitmap,
+                    description = viewModel.currentWeather.description,
+                    temp = viewModel.currentWeather.temp,
+                    onDismissRequest = {viewModel.showWeatherDialog=false}
+                )
+            }
             content()
 
         }
     )
+}
+
+@Preview
+@Composable
+fun AddBathingSiteScreenPrev() {
+    AddBathingSiteScreen(navController = null)
 }
