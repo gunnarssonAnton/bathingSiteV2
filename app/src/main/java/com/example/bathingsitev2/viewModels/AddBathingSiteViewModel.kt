@@ -43,8 +43,8 @@ class AddBathingSiteViewModel : ViewModel() {
         this.name = ""
         this.description = ""
         this.address = ""
-        this.latitude = 0
-        this.longitude = 0
+        this.latitude = null
+        this.longitude = null
         this.rating = 0
         this.waterTemp = 0
         this.dateForTemp = ""
@@ -95,30 +95,30 @@ class AddBathingSiteViewModel : ViewModel() {
 
     fun loadWeather(){
         var dataString: String
-        CoroutineScope(Dispatchers.IO).launch {
-            showLoading = true
-                dataString =   URL("https://dt031g.programvaruteknik.nu/bathingsites/weather.php?q=stockholm").readText()
+        if (constructUrl().isNotEmpty()){
 
-            showLoading = if (getStatusCode(dataString = dataString) != "404") {
+            CoroutineScope(Dispatchers.IO).launch {
+                showLoading = true
+                dataString = URL(constructUrl()).readText()
 
-
-                currentWeather = CurrentWeather(getImageFromURL(getWeatherData(dataString = dataString)?.get("icon").toString()),
-                    getWeatherData(dataString = dataString)?.get("description").toString(),
-                    getMainData(dataString = dataString).get("temp").toString())
+                showLoading = if (getStatusCode(dataString = dataString) != "404") {
 
 
-                println(
-                    """
-                            Description: ${getWeatherData(dataString)?.get("description")}
-                            Temp: ${getMainData(dataString).get("temp")}
-                        """.trimIndent()
-                )
-                false
-            } else {
-                false
+                    currentWeather = CurrentWeather(getImageFromURL(getWeatherData(dataString = dataString)?.get("icon").toString()),
+                        getWeatherData(dataString = dataString)?.get("description").toString(),
+                        getMainData(dataString = dataString).get("temp").toString())
+                    false
+                } else {
+                    false
+                }
+                showWeatherDialog = true
             }
-            showWeatherDialog = true
+
+        }else{
+            showLoading = false
+            println("ERROR")
         }
+
 
     }
     /**
@@ -147,8 +147,21 @@ class AddBathingSiteViewModel : ViewModel() {
         return BitmapFactory.decodeByteArray(img,0,img.size).asImageBitmap()
     }
 
-    fun constructUrl(extension: String){
-
+    private fun constructUrl(): String {
+        val url = "https://dt031g.programvaruteknik.nu/bathingsites/weather.php"
+        val newAddress = if (address.split(" ").size > 1){
+            address.split(" ")[1]
+        }else{
+            address
+        }
+        return if (this.longitude == null && newAddress.isNotEmpty() ||
+            this.latitude == null && newAddress.isNotEmpty()){
+            "$url?q=$newAddress"
+        }else if (longitude != null && latitude != null){
+            "$url?lat$latitude&$longitude"
+        }else{
+            ""
+        }
     }
 
 
