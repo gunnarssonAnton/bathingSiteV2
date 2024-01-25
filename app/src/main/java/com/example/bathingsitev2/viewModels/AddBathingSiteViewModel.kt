@@ -16,6 +16,7 @@ import org.json.JSONObject
 import java.net.URL
 
 class AddBathingSiteViewModel : ViewModel() {
+
     var name by mutableStateOf("")
     var description by mutableStateOf("")
     var address by mutableStateOf("")
@@ -26,14 +27,14 @@ class AddBathingSiteViewModel : ViewModel() {
     var dateForTemp by mutableStateOf("")
 
     lateinit var currentWeather: CurrentWeather
-
     private set
 
     var showWeatherDialog: Boolean by mutableStateOf(false)
 
+    var showERRORDialog: Boolean by mutableStateOf(false)
+        private set
     var showLoading: Boolean by mutableStateOf(false)
         private set
-
     var showSiteDialog by mutableStateOf(false)
         private set
     var showErrorText by mutableStateOf(false)
@@ -70,6 +71,8 @@ class AddBathingSiteViewModel : ViewModel() {
     }
     fun removeDialog(){
         this.showSiteDialog = false
+        this.showERRORDialog = false
+        this.showWeatherDialog = false
     }
 
     fun showLoading(){
@@ -116,7 +119,7 @@ class AddBathingSiteViewModel : ViewModel() {
 
         }else{
             showLoading = false
-            println("ERROR")
+            showERRORDialog = true
         }
 
 
@@ -158,7 +161,7 @@ class AddBathingSiteViewModel : ViewModel() {
             this.latitude == null && newAddress.isNotEmpty()){
             "$url?q=$newAddress"
         }else if (longitude != null && latitude != null){
-            "$url?lat$latitude&$longitude"
+            "$url?lat=$latitude&lon=$longitude"
         }else{
             ""
         }

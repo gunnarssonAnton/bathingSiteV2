@@ -264,6 +264,13 @@ fun ActionBar(
                     onDismissRequest = {viewModel.showWeatherDialog=false}
                 )
             }
+            if(viewModel.showERRORDialog){
+                ErrorDialog(
+                    title = "ERROR",
+                    message = "FILL ADDRESS OR LATITUDE AND LONGITUDE TO CONTINUE",
+                    onDismissRequest = { viewModel.removeDialog() }
+                )
+            }
             content()
 
         }
