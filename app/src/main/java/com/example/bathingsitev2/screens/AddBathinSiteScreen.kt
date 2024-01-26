@@ -11,12 +11,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.bathingsitev2.components.*
 import com.example.bathingsitev2.viewModels.AddBathingSiteViewModel
@@ -27,6 +27,7 @@ fun AddBathingSiteScreen(
     navController: NavHostController?,
     addBathingSiteViewModel: AddBathingSiteViewModel = viewModel()
 ) {
+    addBathingSiteViewModel.preferencesManager = PreferencesManager(LocalContext.current)
     val config = LocalConfiguration.current
     when(config.orientation){
 
@@ -182,14 +183,13 @@ fun AddBathingSiteForm(
 @Composable
 fun ActionBar(
     viewModel: AddBathingSiteViewModel,
-    navigateBack: NavController?,
+    navController: NavHostController?,
     content: @Composable ()->Unit
 ) {
     var showDropdown by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
-
             TopAppBar(
                 backgroundColor = MaterialTheme.colors.primary,
                 title = {
@@ -202,7 +202,7 @@ fun ActionBar(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navigateBack?.navigate(Screen.MainScreen.route) }) {
+                    IconButton(onClick = { navController?.navigate(Screen.MainScreen.route) }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "localized description",
@@ -234,7 +234,10 @@ fun ActionBar(
                         DropdownMenuItem(onClick = { viewModel.loadWeather()}) {
                             Text(text = "Show Weather")
                         }
-                        DropdownMenuItem(onClick = { println("CLICK") }) {
+                        DropdownMenuItem(
+                            onClick = {
+                                navController?.navigate(Screen.SettingsScreen.route)
+                            }) {
                             Text(text = "Settings")
                         }
                     }

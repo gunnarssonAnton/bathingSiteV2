@@ -7,11 +7,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
+import com.example.bathingsitev2.components.PreferencesManager
 import com.example.bathingsitev2.models.CurrentWeather
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
 
@@ -28,6 +28,8 @@ class AddBathingSiteViewModel : ViewModel() {
 
     lateinit var currentWeather: CurrentWeather
     private set
+
+    lateinit var preferencesManager: PreferencesManager
 
     var showWeatherDialog: Boolean by mutableStateOf(false)
 
@@ -151,7 +153,7 @@ class AddBathingSiteViewModel : ViewModel() {
     }
 
     private fun constructUrl(): String {
-        val url = "https://dt031g.programvaruteknik.nu/bathingsites/weather.php"
+        val url = preferencesManager.getData("URL_KEY")
         val newAddress = if (address.split(" ").size > 1){
             address.split(" ")[1]
         }else{
