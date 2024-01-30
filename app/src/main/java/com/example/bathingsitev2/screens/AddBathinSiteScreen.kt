@@ -44,7 +44,8 @@ fun AddBathingSiteScreen(
             ActionBar(addBathingSiteViewModel, navController)
             {
                 Row {
-                    BathingSiteView(modifier = Modifier.weight(1F))
+                    BathingSiteView(modifier = Modifier.weight(1F),
+                        viewOnClick = { navController?.navigate(Screen.AllBathingSitesScreen.route) })
                     AddBathingSiteForm(
                         viewModel = addBathingSiteViewModel,
                         modifier = Modifier.weight(1F)

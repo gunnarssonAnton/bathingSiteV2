@@ -18,7 +18,8 @@ import com.example.bathingsitev2.viewModels.BathingSiteViewModel
 @Composable
 fun BathingSiteView(
     modifier: Modifier,
-    bathingSiteViewModel: BathingSiteViewModel = viewModel()
+    bathingSiteViewModel: BathingSiteViewModel = viewModel(),
+    viewOnClick:() -> Unit
 ) {
 
     Box(
@@ -28,7 +29,7 @@ fun BathingSiteView(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
 
-            BathingSiteImg { bathingSiteViewModel.increaseAmount() }
+            BathingSiteImg { viewOnClick() }
             Text(text = "${bathingSiteViewModel.amount.value} Bathing sites",
             fontSize = 30.sp)
 
@@ -51,5 +52,5 @@ fun BathingSiteImg(onClick: ()-> Unit) {
 @Preview
 @Composable
 fun BatingSiteViewPrev() {
-    BathingSiteView(Modifier)
+
 }

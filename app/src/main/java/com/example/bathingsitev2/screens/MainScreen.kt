@@ -7,8 +7,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.bathingsitev2.views.BathingSiteView
 
@@ -19,7 +17,10 @@ fun MainScreen(navController: NavHostController) {
                 navController.navigate(Screen.AddBathingSiteScreen.route)
             }
         }) {
-            BathingSiteView(Modifier)
+            BathingSiteView(
+                Modifier,
+                viewOnClick = {navController.navigate(Screen.AllBathingSitesScreen.route)}
+            )
         }
 
 

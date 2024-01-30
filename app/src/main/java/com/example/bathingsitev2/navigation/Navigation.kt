@@ -4,10 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.bathingsitev2.screens.AddBathingSiteScreen
-import com.example.bathingsitev2.screens.MainScreen
-import com.example.bathingsitev2.screens.Screen
-import com.example.bathingsitev2.screens.SettingsScreen
+import com.example.bathingsitev2.screens.*
 
 @Composable
 fun Navigation() {
@@ -29,6 +26,11 @@ fun Navigation() {
             route = Screen.SettingsScreen.route
         ){
             SettingsScreen(navHostController = navController)
+        }
+        composable(
+            route = Screen.AllBathingSitesScreen.route
+        ){
+            AllBathingSitesScreen(navController = navController)
         }
     }
 }

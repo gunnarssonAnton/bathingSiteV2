@@ -4,4 +4,5 @@ sealed class Screen(val route: String){
     object MainScreen: Screen("main_screen")
     object AddBathingSiteScreen: Screen("add_bathing_site_screen")
     object SettingsScreen: Screen("settings_screen")
+    object AllBathingSitesScreen: Screen("all_bathing_site_screen")
 }
