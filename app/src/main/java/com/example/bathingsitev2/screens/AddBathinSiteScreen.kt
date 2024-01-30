@@ -16,7 +16,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.bathingsitev2.components.*
 import com.example.bathingsitev2.viewModels.AddBathingSiteViewModel
@@ -25,7 +25,7 @@ import com.example.bathingsitev2.views.BathingSiteView
 @Composable
 fun AddBathingSiteScreen(
     navController: NavHostController?,
-    addBathingSiteViewModel: AddBathingSiteViewModel = viewModel()
+    addBathingSiteViewModel: AddBathingSiteViewModel = hiltViewModel()
 ) {
     addBathingSiteViewModel.preferencesManager = PreferencesManager(LocalContext.current)
     val config = LocalConfiguration.current

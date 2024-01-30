@@ -13,8 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AllBathingSitesViewModel @Inject constructor(
     private val repository: Repository
-
-):ViewModel() {
+): ViewModel() {
     private val _bathingSites = MutableStateFlow(emptyList<BathingSite>())
     val bathingSites: StateFlow<List<BathingSite>> = _bathingSites
 
@@ -24,23 +23,5 @@ class AllBathingSitesViewModel @Inject constructor(
         }
     }
 
-    fun insertToDb(){
-        viewModelScope.launch {
-            repository.insertBathingSite(
-                    BathingSite(
-                        null,
-                        "NAMN",
-                        "en Bad PLATS",
-                        "Ostersund",
-                        "60.12",
-                        "14.22",
-                        "3.0",
-                        "3",
-                        "2023/10/10"
-                    )
-                )
-            _bathingSites.emit(repository.getAllSites())
-        }
-    }
 }
 

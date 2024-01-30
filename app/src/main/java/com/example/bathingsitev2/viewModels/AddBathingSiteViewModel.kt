@@ -7,15 +7,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.bathingsitev2.components.PreferencesManager
+import com.example.bathingsitev2.database.BathingSite
 import com.example.bathingsitev2.models.CurrentWeather
+import com.example.bathingsitev2.repository.Repository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.net.URL
+import javax.inject.Inject
 
-class AddBathingSiteViewModel : ViewModel() {
+@HiltViewModel
+class AddBathingSiteViewModel @Inject constructor(
+    private val repository: Repository
+) : ViewModel() {
 
     var name by mutableStateOf("")
     var description by mutableStateOf("")
@@ -66,11 +74,31 @@ class AddBathingSiteViewModel : ViewModel() {
 
     fun saveField(){
         if (isValidInput()){
-            this.showSiteDialog = true
+            this.insertToDB()
             this.showErrorText = false
         }
 
     }
+
+    fun insertToDB(){
+        viewModelScope.launch {
+            repository.insertBathingSite(
+                BathingSite(
+                    null,
+                    name = name,
+                    description = description,
+                    address = address,
+                    longitude = longitude.toString(),
+                    latitude = latitude.toString(),
+                    grade = rating.toString(),
+                    water_temp = waterTemp.toString(),
+                    date_for_temp = dateForTemp
+                )
+            )
+        }
+
+    }
+
     fun removeDialog(){
         this.showSiteDialog = false
         this.showERRORDialog = false
@@ -169,12 +197,4 @@ class AddBathingSiteViewModel : ViewModel() {
         }
     }
 
-
- /*   *//**
-     * used to get imgCode from a url and return a bitmap
-     *//*
-    private fun getImg(imgCode: String): Bitmap {
-        val image = URL(getString(R.string.imgUrl)+imgCode+getString(R.string.png)).readBytes()
-        return BitmapFactory.decodeByteArray(image, 0, image.size)
-    }*/
 }
