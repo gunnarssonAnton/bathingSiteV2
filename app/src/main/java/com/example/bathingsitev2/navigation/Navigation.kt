@@ -32,5 +32,10 @@ fun Navigation() {
         ){
             AllBathingSitesScreen(navController = navController)
         }
+        composable(
+            route = Screen.DownloadScreen.route
+        ){
+            DownloadScreen()
+        }
     }
 }

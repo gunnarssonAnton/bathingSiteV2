@@ -60,7 +60,9 @@ fun AllBathingSitesScreen(
                     }
                 },
                 actions = {
-
+                    TextButton(onClick = { navController?.navigate(Screen.DownloadScreen.route) }) {
+                        Text(text = "DOWNLOAD")
+                    }
                 }
             )
         }
