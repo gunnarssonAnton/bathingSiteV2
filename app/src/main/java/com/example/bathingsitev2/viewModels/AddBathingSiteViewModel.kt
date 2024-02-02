@@ -80,21 +80,25 @@ class AddBathingSiteViewModel @Inject constructor(
 
     }
 
-    fun insertToDB(){
+    private fun insertToDB(){
+        val newBathSite = BathingSite(
+                                null,
+                                name = this.name,
+                                description = this.description,
+                                address = this.address,
+                                longitude = this.longitude.toString(),
+                                latitude = this.latitude.toString(),
+                                grade = this.rating.toString(),
+                                water_temp = this.waterTemp.toString(),
+                                date_for_temp = this.dateForTemp
+                                )
         viewModelScope.launch {
-            repository.insertBathingSite(
-                BathingSite(
-                    null,
-                    name = name,
-                    description = description,
-                    address = address,
-                    longitude = longitude.toString(),
-                    latitude = latitude.toString(),
-                    grade = rating.toString(),
-                    water_temp = waterTemp.toString(),
-                    date_for_temp = dateForTemp
-                )
-            )
+            if(repository.getAllSites().any { it.latitude.equals(newBathSite.latitude) && it.longitude.equals(newBathSite.longitude) }){
+             println("Already exists") //TODO FIXA RUTA
+            }else{
+                //TODO FIXA RUTA
+                repository.insertBathingSite(newBathSite)
+            }
         }
 
     }
@@ -196,5 +200,4 @@ class AddBathingSiteViewModel @Inject constructor(
             ""
         }
     }
-
 }
