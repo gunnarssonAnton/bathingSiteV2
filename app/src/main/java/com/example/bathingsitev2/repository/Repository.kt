@@ -12,6 +12,9 @@ class Repository @Inject constructor(private val bathingSiteDao: BathingSiteDao)
     fun getAllSites(): List<BathingSite>{
         return bathingSiteDao.getAll()
     }
+    fun getSpecificSite(id: Int): BathingSite {
+        return bathingSiteDao.getSpecificSite(id = id)
+    }
 
     suspend fun insertBathingSite(bathingSite: BathingSite){
         withContext(Dispatchers.IO){

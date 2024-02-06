@@ -10,9 +10,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Bathtub
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,14 +24,16 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.bathingsitev2.R
+import com.example.bathingsitev2.components.SiteDialog
 import com.example.bathingsitev2.viewModels.AllBathingSitesViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllBathingSitesScreen(
     navController: NavHostController?,
-    viewModel: AllBathingSitesViewModel = hiltViewModel()
+     viewModel: AllBathingSitesViewModel = hiltViewModel()
 ) {
+
     val bathingSites = viewModel.bathingSites.collectAsState(initial = emptyList())
 
     Scaffold(
@@ -67,7 +69,6 @@ fun AllBathingSitesScreen(
             )
         }
     ) {
-
         LazyColumn(modifier = Modifier.padding(it)){
             items(bathingSites.value){bathingSite->
                 Card(
@@ -75,7 +76,10 @@ fun AllBathingSitesScreen(
                         .padding(12.dp)
                         .fillMaxWidth()
                         .wrapContentHeight()
-                        .clickable { println(bathingSite.name) },
+                        .clickable {
+                            viewModel.selectedSiteId.value = bathingSite.id!!
+                            viewModel.showSelectedSite.value = true
+                        },
                     colors= CardDefaults.cardColors(containerColor = Color(33, 150, 243)),
                     elevation = CardDefaults.cardElevation(10.dp),
 
@@ -97,6 +101,15 @@ fun AllBathingSitesScreen(
                 }
             }
 
+        }
+        if (viewModel.showSelectedSite.value){
+            SiteDialog(
+                onDismissRequest = { viewModel.showSelectedSite.value = false},
+                onConfirmation = { viewModel.showSelectedSite.value = false},
+                dialogTitle = viewModel.getSpecificSite()?.name.toString(),
+                dialogText = viewModel.getInfoAboutSite(),
+                icon = Icons.Filled.Bathtub
+            )
         }
 
     }
