@@ -34,7 +34,7 @@ fun SettingsScreen(
     navHostController: NavHostController?
 ) {
     viewModel.preferencesManager = PreferencesManager(LocalContext.current)
-    viewModel.editUrl(viewModel.getPreferenceManager().getData("URL_KEY"))
+    viewModel.editUrl(viewModel.getPreferenceManager().getData("URL_KEY","https://dt031g.programvaruteknik.nu/bathingsites/weather.php"))
 
     Scaffold(
         topBar = {

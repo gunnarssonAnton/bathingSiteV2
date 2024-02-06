@@ -12,7 +12,7 @@ class PreferencesManager(context: Context) {
         editor.apply()
     }
 
-    fun getData(key: String,defaultValue:String = "https://dt031g.programvaruteknik.nu/bathingsites/weather.php"):String{
+    fun getData(key: String,defaultValue:String= ""):String{
         return sharedPreferences.getString(key, defaultValue)?:defaultValue
     }
 }
