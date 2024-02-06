@@ -35,7 +35,7 @@ fun Navigation() {
         composable(
             route = Screen.DownloadScreen.route
         ){
-            DownloadScreen()
+            DownloadScreen(navHostController = navController)
         }
     }
 }

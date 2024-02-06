@@ -9,6 +9,7 @@ import android.os.Environment
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.bathingsitev2.components.PreferencesManager
@@ -25,6 +26,8 @@ class DownloadViewModel @Inject constructor(
    private val repository: Repository
 ):ViewModel() {
    lateinit var viewModelContext : Context
+   val isLoading = mutableStateOf(false)
+
    fun setContextFromView(context: Context){
       this.viewModelContext = context
    }
@@ -73,6 +76,7 @@ class DownloadViewModel @Inject constructor(
 
                println("Download with ID $id finished!")
                currentDir.delete()
+               isLoading.value = false
             }
          }
       }

@@ -21,7 +21,6 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -66,7 +65,7 @@ fun WeatherDialog(
 }
 
 @Composable
-fun LoadingDialog() {
+fun LoadingDialog(text:String) {
     Dialog(
         onDismissRequest = { println("DISSMISS")},
         DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
@@ -88,7 +87,7 @@ fun LoadingDialog() {
                 )
                 Text(
                     modifier = Modifier.padding(10.dp),
-                    text = "Getting currant weather...",
+                    text = text,
                     fontSize = 20.sp
                 )
             }

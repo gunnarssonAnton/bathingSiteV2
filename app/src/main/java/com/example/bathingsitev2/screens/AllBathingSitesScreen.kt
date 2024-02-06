@@ -50,7 +50,7 @@ fun AllBathingSitesScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        navController?.navigate(Screen.MainScreen.route)//TODO FIXA EN BÄTTRE
+                        navController?.navigate(Screen.MainScreen.route)
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
@@ -61,7 +61,7 @@ fun AllBathingSitesScreen(
                 },
                 actions = {
                     TextButton(onClick = { navController?.navigate(Screen.DownloadScreen.route) }) {
-                        Text(text = "DOWNLOAD")
+                        Text(text = "DOWNLOAD", color = Color.White)
                     }
                 }
             )

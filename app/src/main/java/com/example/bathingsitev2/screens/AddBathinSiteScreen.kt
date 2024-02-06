@@ -258,7 +258,7 @@ fun ActionBar(
                 )
             }
             if(viewModel.showLoading){
-                LoadingDialog()
+                LoadingDialog("Getting currant weather...")
             }
             if (viewModel.showWeatherDialog){
                 WeatherDialog(

@@ -60,9 +60,6 @@ fun SettingsScreen(
                             tint = Color.White
                         )
                     }
-                },
-                actions = {
-
                 }
             )
         },
